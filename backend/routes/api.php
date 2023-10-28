@@ -26,5 +26,5 @@ Route::prefix('/v1')
         // Route::delete('/word/{word:id}', [WordController::class, 'deleteWord']);
         // Route::get('/words/', [WordController::class, 'allWords']);
 
-        Route::post('paragraph_to_words', [ParagraphController::class], 'paragraphToWords');
+        Route::post('paragraph_to_words', [ParagraphController::class, 'paragraphToWords']);
     });
