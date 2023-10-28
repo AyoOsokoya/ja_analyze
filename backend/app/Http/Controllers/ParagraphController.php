@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Response;
 
 class ParagraphController extends Controller
 {
-    function paragraphToWords(Request $request) : JsonResponse
+    function paragraphToWords(Request $request): JsonResponse
     {
         $paragraph = $request->post("paragraph");
 
@@ -17,19 +17,25 @@ class ParagraphController extends Controller
             ->timeout(3)
             // ->throw()
             ->post(config('api.kuromoji.url'), [
-            'paragraph' => $paragraph
-        ]);
+                'paragraph' => $paragraph
+            ]);
 
-        return Response::json($response->json());
-        // return $tokenized_paragraph;
+        $tokenized_words = json_decode($response->body(), true);
+        $word_responses = [];
 
-        // $words = [];
-        // foreach ($tokenized_paragraph as $token) {
-        //     $words[] = $token->jisho = Http::get('https://jisho.org/api/v1/search/words?keyword=' . $token['surface_form']);
-        // }
+        foreach ($tokenized_words as $token) {
+            $word_responses[] = Http::retry(3, 100)
+                ->timeout(3)
+                // ->throw()
+                ->get(config('api.jisho.url'), [
+                    'keyword' => $token['surface_form']
+                ]);
+        }
 
-        // Return error
+        $words_return = collect($word_responses)->map(function ($word) {
+            return json_decode($word->body(), true);
+        });
 
-        // return $paragraph;
+        return Response::json($words_return);
     }
 }

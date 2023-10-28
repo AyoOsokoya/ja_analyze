@@ -7,6 +7,7 @@ const url = require('url');
 const hostname = '127.0.0.1';
 const port = 3000;
 
+// TODO: Error handling when length is zero or non string
 const server = http.createServer((req, res) => {
     kuromoji.builder({ dicPath: DIC_DIR }).build(function (error, tokenizer) {
         res.statusCode = 200;
