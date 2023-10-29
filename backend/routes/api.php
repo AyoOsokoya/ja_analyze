@@ -32,5 +32,5 @@ Route::prefix('/v1')
                 // [WordController::class, 'CheckRandomWordMcqAnswer']);
         });
 
-        // Route::get('/words/', [WordController::class, 'allWords']);
+        // Route::get('/words/', [WordController::class, 'AllWords']);
     });
