@@ -2,25 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WordController extends Controller
 {
-    function AllWords()
+    function AllWords(): JsonResponse
     {
         // Call API action
-        return ["word1", "word2", "word3"];
+        return response()->json([""]);
     }
 
-    function AddWord(Request $request)
+    function AddWord(Request $request): JsonResponse
     {
-        $word = $request->input("word");
-        return $word;
+        // save the word if it does not exist
+        return response()->json([""]);
     }
 
-    function DeleteWord(Request $request)
+    function DeleteWord(Request $request): JsonResponse
     {
-        $word = $request->input("word");
-        return $word;
+        // Delete word if it does not exist
+        return response()->json([""]);
+    }
+
+    function RandomWordMcq(Request $request): JsonResponse
+    {
+        // if more than 4 words create
+        // if less than 4 words return error
+        return response()->json([""]);
+    }
+
+    function CheckRandomWordMcqAnswer(Request $request): JsonResponse
+    {
+        // Return true or false
+        return response()->json([""]);
     }
 }
