@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -13,8 +13,8 @@ class ParagraphController extends Controller
     {
         $paragraph = $request->post("paragraph");
 
-        $response = Http::retry(3, 100)
-            ->timeout(3)
+        $response = Http::retry(3)
+            // ->timeout(3)
             // ->throw()
             ->post(config('api.kuromoji.url'), [
                 'paragraph' => $paragraph
@@ -23,19 +23,17 @@ class ParagraphController extends Controller
         $tokenized_words = json_decode($response->body(), true);
         $word_responses = [];
 
-        foreach ($tokenized_words as $token) {
-            $word_responses[] = Http::retry(3, 100)
-                ->timeout(3)
+        foreach ($tokenized_words as $index => $token) {
+            $word_response = Http::retry(3)
+                // ->timeout(3)
                 // ->throw()
                 ->get(config('api.jisho.url'), [
                     'keyword' => $token['surface_form']
                 ]);
+            $word_response = json_decode($word_response->body(), true);
+            $word_response['data'][$index]['kuruomji'] = $token;
+            $word_responses[] = $word_response;
         }
-
-        $words_return = collect($word_responses)->map(function ($word) {
-            return json_decode($word->body(), true);
-        });
-
-        return Response::json($words_return);
+        return Response::json($word_responses);
     }
 }
