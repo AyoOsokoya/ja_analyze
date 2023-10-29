@@ -71,4 +71,9 @@ class Sense extends Model
         'info' => 'array',
         'sentences' => 'array',
     ];
+
+    function word(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Word::class);
+    }
 }

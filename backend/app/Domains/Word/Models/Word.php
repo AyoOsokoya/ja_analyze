@@ -26,4 +26,14 @@ class Word extends Model
         'id',
         'slug',
     ];
+
+    public function readings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Reading::class);
+    }
+
+    public function senses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Sense::class);
+    }
 }

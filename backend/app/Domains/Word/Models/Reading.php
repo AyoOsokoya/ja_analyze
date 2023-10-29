@@ -30,4 +30,9 @@ class Reading extends Model
         'kanji',
         'reading',
     ];
+
+    public function word(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Word::class);
+    }
 }
