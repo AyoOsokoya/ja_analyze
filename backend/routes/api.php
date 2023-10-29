@@ -22,9 +22,15 @@ use App\Http\Controllers\ParagraphController;
 
 Route::prefix('/v1')
     ->group(function () {
-        // Route::post('/word/', [WordController::class, 'addWord']);
-        // Route::delete('/word/{word:id}', [WordController::class, 'deleteWord']);
-        // Route::get('/words/', [WordController::class, 'allWords']);
-
         Route::post('paragraph_to_words', [ParagraphController::class, 'paragraphToWords']);
+
+        Route::prefix('word')->group(function () {
+            // Route::post('/', [WordController::class, 'AddWord']);
+            // Route::delete('/{word:id}', [WordController::class, 'DeleteWord']);
+            // Route::get('/random_mcq', [WordController::class, 'RandomWordMcq']);
+            // Route::post('/check_random_word_mcq_answer',
+                // [WordController::class, 'CheckRandomWordMcqAnswer']);
+        });
+
+        // Route::get('/words/', [WordController::class, 'allWords']);
     });
