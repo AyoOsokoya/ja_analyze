@@ -15,6 +15,7 @@ return new class extends Migration {
         Schema::create(app(Word::class)->getTable(), function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary()->index()->unique();
             $table->string('slug')->unique();
+            $table->string('surface_form')->unique();
             $table->datetimes();
         });
     }
