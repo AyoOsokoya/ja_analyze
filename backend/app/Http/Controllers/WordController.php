@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Word\Actions\MakeWordAction;
+use App\Domains\Word\Actions\SaveWordAction;
+use App\Domains\Word\Models\Reading;
+use App\Domains\Word\Models\Sense;
+use App\Domains\Word\Models\Word;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -9,32 +14,66 @@ class WordController extends Controller
 {
     function AllWords(): JsonResponse
     {
-        // Call API action
         return response()->json([""]);
     }
 
     function AddWord(Request $request): JsonResponse
     {
-        // save the word if it does not exist
+        if (Word::find($$request->word_id)) {
+            return response()->json([""]);
+        }
+
+        $WordDTO = MakeWordAction::make($request->word_data)->execute();
+        SaveWordAction::make($WordDTO)->execute();
         return response()->json([""]);
     }
 
+    // Use implicit binding
     function DeleteWord(Request $request): JsonResponse
     {
-        // Delete word if it does not exist
-        return response()->json([""]);
+        $word_id = $request->get("word_id");
+        Word::destroy($word_id);
+        Sense::destroy(['word_id', $word_id]);
+        Reading::destroy(['word_id', $word_id]);
+
+        return response()->json(['delete_word' => $word_id]);
     }
 
     function RandomWordMcq(Request $request): JsonResponse
     {
-        // if more than 4 words create
-        // if less than 4 words return error
-        return response()->json([""]);
+        if (Word::count() >= 4) {
+            $random_question_words = Word::inRandomOrder()->limit(5)->with('sense', 'reading')->get();
+
+            return response()->json(json_encode([
+                'status' => 'success',
+                'data' => $random_question_words,
+                'error' => [],
+            ]));
+        }
+
+        return response()->json(json_encode([
+            'status' => 'error',
+            'data' => [],
+            'error' => ['Not enough words to create a quiz. Please add more words.']
+        ]));
     }
 
     function CheckRandomWordMcqAnswer(Request $request): JsonResponse
     {
-        // Return true or false
-        return response()->json([""]);
+        if ($request->get('answer') === $request->get('correct_answer')) {
+            return response()->json(json_encode([
+                'status' => 'success',
+                'data' => ['correct' => true],
+                'error' => [],
+            ]));
+        }
+
+        if ($request->get('answer') === $request->get('correct_answer')) {
+            return response()->json(json_encode([
+                'status' => 'success',
+                'data' => ['correct' => false],
+                'error' => [],
+            ]));
+        }
     }
 }
