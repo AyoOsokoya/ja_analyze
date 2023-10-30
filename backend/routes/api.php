@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\JsonResponseAlwaysMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WordController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\ParagraphController;
 // });
 
 Route::prefix('/v1')
+    ->middleware(JsonResponseAlwaysMiddleware::class)
     ->group(function () {
         Route::post('paragraph_to_words', [ParagraphController::class, 'paragraphToWords']);
 
