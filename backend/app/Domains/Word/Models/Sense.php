@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property array $english_definitions
  * @property array $parts_of_speech
  * @property array $links
- * @property array $text
- * @property array $url
  * @property array $tags
  * @property array $restrictions
  * @property array $see_also
@@ -38,11 +36,6 @@ class Sense extends Model
         'word_id',
         'english_definitions',
         'parts_of_speech',
-        'links',
-        'text',
-        'url',
-        'text',
-        'url',
         'tags',
         'restrictions',
         'see_also',
@@ -61,8 +54,6 @@ class Sense extends Model
         'english_definitions' => 'array',
         'parts_of_speech' => 'array',
         'links' => 'array',
-        'text' => 'array',
-        'url' => 'array',
         'tags' => 'array',
         'restrictions' => 'array',
         'see_also' => 'array',

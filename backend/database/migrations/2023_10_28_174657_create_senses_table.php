@@ -13,19 +13,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(app(Sense::class)->getTable(), function (Blueprint $table) {
-            $table->bigInteger('word_id')->index()->unique();
+            $table->id();
+            $table->bigInteger('word_id')->index();
             $table->json('english_definitions');
-            $table->json('part_of_speech');
-            $table->json('links');
-            $table->json('text');
-            $table->json('url');
-            $table->json('tags');
-            $table->json('restrictions');
-            $table->json('see_also');
-            $table->json('antonyms');
-            $table->json('source');
-            $table->json('info');
-            $table->json('sentences');
+            $table->json('parts_of_speech')->nullable(); // Assume the data is dirty
+            $table->json('links')->nullable();
+            $table->json('tags')->nullable();
+            $table->json('restrictions')->nullable();
+            $table->json('see_also')->nullable();
+            $table->json('antonyms')->nullable();
+            $table->json('source')->nullable();
+            $table->json('info')->nullable();
+            $table->json('sentences')->nullable();
             $table->datetimes();
         });
     }
