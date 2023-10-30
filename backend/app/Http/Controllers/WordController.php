@@ -41,8 +41,11 @@ class WordController extends Controller
 
     function RandomWordMcq(Request $request): JsonResponse
     {
-        if (Word::count() >= 4) {
-            $random_question_words = Word::inRandomOrder()->limit(5)->with('sense', 'reading')->get();
+        if (Word::count() >= config('word.mcq.minimum_word_count')) {
+            $random_question_words = Word::inRandomOrder()
+                ->limit(config('word.mcq.minimum_word_count'))
+                ->with('sense', 'reading')
+                ->get();
 
             return response()->json(json_encode([
                 'status' => 'success',
