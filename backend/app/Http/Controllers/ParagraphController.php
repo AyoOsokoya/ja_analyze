@@ -1,39 +1,42 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\Paragraph\Actions\TokenizeParagraphApiCall;
+use App\Domains\Word\Actions\MakeWordDtoAction;
+use App\Domains\Word\Actions\TokenToWordFromDictionaryApiCall;
+use App\Http\Enums\EnumHttpResponseStatusCode;
+use App\Http\Responses\StandardApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Response;
 
 class ParagraphController extends Controller
 {
     function paragraphToWords(Request $request): JsonResponse
     {
+        // TODO Validate the request
         $paragraph = $request->post("paragraph");
+        $tokens = TokenizeParagraphApiCall::make($paragraph)->execute();
 
-        $response = Http::retry(3)
-            // ->timeout(3)
-            // ->throw()
-            ->post(config('api.kuromoji.url'), [
-                'paragraph' => $paragraph
-            ]);
+        $word_dtos = [];
+        foreach ($tokens as $token) {
+            // TODO Check that the api call returns a valid response
+            $word_response = TokenToWordFromDictionaryApiCall::make($token)->execute();
 
-        $tokenized_words = json_decode($response->body(), true);
-        $word_responses = [];
-
-        foreach ($tokenized_words as $index => $token) {
-            $word_response = Http::retry(3)
-                // ->timeout(3)
-                // ->throw()
-                ->get(config('api.jisho.url'), [
-                    'keyword' => $token['surface_form']
-                ]);
-            $word_response = json_decode($word_response->body(), true);
-            $word_response['data'][$index]['kuruomji'] = $token;
-            $word_responses[] = $word_response;
+            // The first word matches the token most accurately
+            $first_word_from_response = $word_response['data'][0];
+            $first_word_from_response['token'] = $token;
+            $word_dtos[] = MakeWordDtoAction::make($first_word_from_response)->execute();
         }
-        return Response::json($word_responses);
+
+        $api_response = new StandardApiResponse(
+            EnumHttpResponseStatusCode::OK,
+            true,
+            $word_dtos,
+            []
+        );
+
+        return $api_response->jsonResponse();
     }
 }
