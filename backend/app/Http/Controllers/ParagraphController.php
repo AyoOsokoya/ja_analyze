@@ -17,6 +17,15 @@ class ParagraphController extends Controller
     {
         // TODO Validate the request
         $paragraph = $request->post("paragraph");
+        if (!strlen($paragraph)) {
+            return (new StandardApiResponse(
+                EnumHttpResponseStatusCode::BAD_REQUEST,
+                false,
+                [],
+                ["The paragraph is empty"]
+            ))->jsonResponse();
+        }
+
         $tokens = TokenizeParagraphApiCall::make($paragraph)->execute();
 
         $word_dtos = [];

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Domains\Word\Actions\MakeWordAction;
-use App\Domains\Word\Actions\SaveWordAction;
+use App\Domains\Word\Actions\MakeWordDtoAction;
+use App\Domains\Word\Actions\SaveWordDtoAction;
 use App\Domains\Word\Models\Reading;
 use App\Domains\Word\Models\Sense;
 use App\Domains\Word\Models\Word;
@@ -23,8 +23,8 @@ class WordController extends Controller
             return response()->json([""]);
         }
 
-        $WordDTO = MakeWordAction::make($request->word_data)->execute();
-        SaveWordAction::make($WordDTO)->execute();
+        $WordDTO = MakeWordDtoAction::make($request->word_data)->execute();
+        SaveWordDtoAction::make($WordDTO)->execute();
         return response()->json([""]);
     }
 
