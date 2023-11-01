@@ -27,12 +27,12 @@ Route::prefix('/v1')
         Route::post('paragraph_to_words', [ParagraphController::class, 'paragraphToWords']);
 
         Route::prefix('word')->group(function () {
-            // Route::post('/', [WordController::class, 'AddWord']);
-            // Route::delete('/{word:id}', [WordController::class, 'DeleteWord']);
-            // Route::get('/random_mcq', [WordController::class, 'RandomWordMcq']);
-            // Route::post('/check_random_word_mcq_answer',
-                // [WordController::class, 'CheckRandomWordMcqAnswer']);
+            Route::post('/', [WordController::class, 'AddWord']);
+            Route::delete('/{word:id}', [WordController::class, 'DeleteWord']);
+            Route::get('/random_mcq', [WordController::class, 'RandomWordMcq']);
+            Route::post('/check_random_word_mcq_answer',
+                [WordController::class, 'CheckRandomWordMcqAnswer']);
         });
 
-        // Route::get('/words/', [WordController::class, 'AllWords']);
+        Route::get('/words/', [WordController::class, 'AllWords']);
     });
